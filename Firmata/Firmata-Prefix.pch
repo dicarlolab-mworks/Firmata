@@ -15,10 +15,10 @@
 #ifdef __cplusplus
 
 #include <atomic>
+#include <condition_variable>
 #include <mutex>
 #include <thread>
 
-#include <boost/endian/arithmetic.hpp>
 #include <boost/scope_exit.hpp>
 
 #include <MWorksCore/IODevice.h>

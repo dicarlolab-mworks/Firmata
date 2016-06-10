@@ -33,10 +33,14 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		E109F4FF1D148E7800854E47 /* FirmataDigitalInputChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E109F4FD1D148E7800854E47 /* FirmataDigitalInputChannel.cpp */; };
+		E18B6D3A1D0F19B500087249 /* FirmataDigitalChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E18B6D381D0F19B500087249 /* FirmataDigitalChannel.cpp */; };
+		E18B6D3D1D0F221300087249 /* FirmataDigitalOutputChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E18B6D3B1D0F221300087249 /* FirmataDigitalOutputChannel.cpp */; };
 		E1E84AFE1D0B2BC400F45D54 /* FirmataPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1E84AFD1D0B2BC400F45D54 /* FirmataPlugin.cpp */; };
 		E1E84B0B1D0B2D3800F45D54 /* Firmata.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1E84AF41D0B2B4200F45D54 /* Firmata.bundle */; };
 		E1E84B131D0B30F900F45D54 /* MWorksCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E84B121D0B30F900F45D54 /* MWorksCore.framework */; };
 		E1E84B151D0B311C00F45D54 /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E84B141D0B311C00F45D54 /* libboost_system.a */; };
+		E1E84B191D0B3AD400F45D54 /* FirmataDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1E84B171D0B3AD400F45D54 /* FirmataDevice.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +74,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E109F4FD1D148E7800854E47 /* FirmataDigitalInputChannel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FirmataDigitalInputChannel.cpp; sourceTree = "<group>"; };
+		E109F4FE1D148E7800854E47 /* FirmataDigitalInputChannel.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FirmataDigitalInputChannel.hpp; sourceTree = "<group>"; };
+		E18B6D381D0F19B500087249 /* FirmataDigitalChannel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FirmataDigitalChannel.cpp; sourceTree = "<group>"; };
+		E18B6D391D0F19B500087249 /* FirmataDigitalChannel.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FirmataDigitalChannel.hpp; sourceTree = "<group>"; };
+		E18B6D3B1D0F221300087249 /* FirmataDigitalOutputChannel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FirmataDigitalOutputChannel.cpp; sourceTree = "<group>"; };
+		E18B6D3C1D0F221300087249 /* FirmataDigitalOutputChannel.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FirmataDigitalOutputChannel.hpp; sourceTree = "<group>"; };
 		E1E84AF41D0B2B4200F45D54 /* Firmata.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Firmata.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E84AF71D0B2B4200F45D54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E1E84AFD1D0B2BC400F45D54 /* FirmataPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FirmataPlugin.cpp; sourceTree = "<group>"; };
@@ -78,6 +88,8 @@
 		E1E84B111D0B2F1600F45D54 /* Firmata-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Firmata-Prefix.pch"; sourceTree = "<group>"; };
 		E1E84B121D0B30F900F45D54 /* MWorksCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MWorksCore.framework; path = /Library/Frameworks/MWorksCore.framework; sourceTree = "<absolute>"; };
 		E1E84B141D0B311C00F45D54 /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = "/Library/Application Support/MWorks/Developer/lib/libboost_system.a"; sourceTree = "<absolute>"; };
+		E1E84B171D0B3AD400F45D54 /* FirmataDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FirmataDevice.cpp; sourceTree = "<group>"; };
+		E1E84B181D0B3AD400F45D54 /* FirmataDevice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FirmataDevice.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +105,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E18B6D361D0F195700087249 /* Channels */ = {
+			isa = PBXGroup;
+			children = (
+				E18B6D371D0F196800087249 /* Digital */,
+			);
+			path = Channels;
+			sourceTree = "<group>";
+		};
+		E18B6D371D0F196800087249 /* Digital */ = {
+			isa = PBXGroup;
+			children = (
+				E18B6D391D0F19B500087249 /* FirmataDigitalChannel.hpp */,
+				E18B6D381D0F19B500087249 /* FirmataDigitalChannel.cpp */,
+				E109F4FE1D148E7800854E47 /* FirmataDigitalInputChannel.hpp */,
+				E109F4FD1D148E7800854E47 /* FirmataDigitalInputChannel.cpp */,
+				E18B6D3C1D0F221300087249 /* FirmataDigitalOutputChannel.hpp */,
+				E18B6D3B1D0F221300087249 /* FirmataDigitalOutputChannel.cpp */,
+			);
+			path = Digital;
+			sourceTree = "<group>";
+		};
 		E1E84AEB1D0B2B4200F45D54 = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +147,9 @@
 		E1E84AF61D0B2B4200F45D54 /* Firmata */ = {
 			isa = PBXGroup;
 			children = (
+				E18B6D361D0F195700087249 /* Channels */,
+				E1E84B181D0B3AD400F45D54 /* FirmataDevice.hpp */,
+				E1E84B171D0B3AD400F45D54 /* FirmataDevice.cpp */,
 				E1E84AFD1D0B2BC400F45D54 /* FirmataPlugin.cpp */,
 				E1E84B041D0B2CA000F45D54 /* Supporting Files */,
 			);
@@ -222,7 +258,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E109F4FF1D148E7800854E47 /* FirmataDigitalInputChannel.cpp in Sources */,
+				E18B6D3D1D0F221300087249 /* FirmataDigitalOutputChannel.cpp in Sources */,
+				E1E84B191D0B3AD400F45D54 /* FirmataDevice.cpp in Sources */,
 				E1E84AFE1D0B2BC400F45D54 /* FirmataPlugin.cpp in Sources */,
+				E18B6D3A1D0F19B500087249 /* FirmataDigitalChannel.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
