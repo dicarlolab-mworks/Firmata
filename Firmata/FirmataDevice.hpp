@@ -46,8 +46,6 @@ private:
         return ports.at(pinNumber / numPinsPerPort).at(pinNumber % numPinsPerPort);
     }
     
-    bool connect();
-    void disconnect();
     bool checkProtocolVersion(unique_lock &lock);
     bool configureDigitalPorts();
     bool startDigitalIO();
@@ -56,14 +54,9 @@ private:
     bool sendData(const std::vector<std::uint8_t> &data);
     void receiveData();
     
-    void serialError(const std::string &msg) const;
-    
-    const std::string serialPort;
-    
+    const std::string path;
     std::array<std::array<boost::shared_ptr<FirmataDigitalChannel>, numPinsPerPort>, numPorts> ports;
-    
-    int fd;
-    struct termios origAttrs;
+    SerialPort serialPort;
     
     unique_lock::mutex_type mutex;
     std::condition_variable condition;

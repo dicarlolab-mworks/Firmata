@@ -39,14 +39,13 @@ void FirmataDevice::describeComponent(ComponentInfo &info) {
     
     info.setSignature("iodevice/firmata");
     
-    info.addParameter(SERIAL_PORT);
+    info.addParameter(SERIAL_PORT, false);
 }
 
 
 FirmataDevice::FirmataDevice(const ParameterValueMap &parameters) :
     IODevice(parameters),
-    serialPort(parameters[SERIAL_PORT].str()),
-    fd(-1),
+    path(parameters[SERIAL_PORT].str()),
     deviceProtocolVersionReceived(false),
     deviceProtocolVersionMajor(0),
     deviceProtocolVersionMinor(0),
@@ -59,10 +58,6 @@ FirmataDevice::~FirmataDevice() {
     if (receiveDataThread.joinable()) {
         continueReceivingData.clear();
         receiveDataThread.join();
-    }
-    
-    if (-1 != fd) {
-        disconnect();
     }
 }
 
@@ -88,7 +83,7 @@ void FirmataDevice::addChild(std::map<std::string, std::string> parameters,
 bool FirmataDevice::initialize() {
     mprintf(M_IODEVICE_MESSAGE_DOMAIN, "Configuring Firmata device \"%s\"...", getTag().c_str());
     
-    if (!connect()) {
+    if (!serialPort.connect(path, B57600)) {
         return false;
     }
     
@@ -142,83 +137,6 @@ bool FirmataDevice::stopDeviceIO() {
     }
     
     return true;
-}
-
-
-bool FirmataDevice::connect() {
-    // Open the serial port read/write, with no controlling terminal, and don't wait for a connection.
-    // The O_NONBLOCK flag also causes subsequent I/O on the device to be non-blocking.
-    if (-1 == (fd = ::open(serialPort.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK))) {
-        serialError("Cannot open serial port");
-        return false;
-    }
-    
-    bool shouldClose = true;
-    BOOST_SCOPE_EXIT(&shouldClose, &fd) {
-        if (shouldClose) {
-            (void)::close(fd);
-            fd = -1;
-        }
-    } BOOST_SCOPE_EXIT_END
-    
-    // open() follows POSIX semantics: multiple open() calls to the same file will succeed
-    // unless the TIOCEXCL ioctl is issued.  This will prevent additional opens except by root-owned
-    // processes.
-    if (-1 == ioctl(fd, TIOCEXCL)) {
-        serialError("Cannot obtain exclusive use of serial port");
-        return false;
-    }
-    
-    // Now that the device is open, clear the O_NONBLOCK flag so subsequent I/O will block
-    if (-1 == fcntl(fd, F_SETFL, 0)) {
-        serialError("Cannot restore blocking I/O on serial port");
-        return false;
-    }
-    
-    // Get the current options and save them, so we can restore the default settings later
-    if (-1 == tcgetattr(fd, &origAttrs)) {
-        serialError("Cannot obtain current serial port attributes");
-        return false;
-    }
-    
-    struct termios attrs = origAttrs;
-    cfmakeraw(&attrs);            // Set raw input (non-canonical) mode
-    attrs.c_cc[VMIN] = 0;         // Reads block until a single byte has been received
-    attrs.c_cc[VTIME] = 5;        //   or a 500ms timeout expires
-    cfsetspeed(&attrs, B57600);   // Set speed to 57600 baud
-    attrs.c_cflag |= CS8;         // Use 8-bit words
-    attrs.c_cflag &= ~PARENB;     // No parity
-    attrs.c_cflag &= ~CSTOPB;     // 1 stop bit
-    attrs.c_cflag |= CLOCAL;      // Ignore modem status lines
-    
-    // Cause the new options to take effect immediately
-    if (-1 == tcsetattr(fd, TCSANOW, &attrs)) {
-        serialError("Cannot set serial port attributes");
-        return false;
-    }
-    
-    shouldClose = false;
-    
-    return true;
-}
-
-
-void FirmataDevice::disconnect() {
-    // Block until all written output has been sent to the device
-    if (-1 == tcdrain(fd)) {
-        serialError("Serial port drain failed");
-    }
-    
-    // Restore original options
-    if (-1 == tcsetattr(fd, TCSANOW, &origAttrs)) {
-        serialError("Cannot restore previous serial port attributes");
-    }
-    
-    if (-1 == ::close(fd)) {
-        serialError("Cannot close serial port");
-    }
-    
-    fd = -1;
 }
 
 
@@ -383,12 +301,8 @@ void FirmataDevice::setDigitalOutput(int pinNumber, bool value) {
 }
 
 
-bool FirmataDevice::sendData(const std::vector<std::uint8_t> &data) {
-    if (-1 == ::write(fd, data.data(), data.size())) {
-        serialError("Write to serial port failed");
-        return false;
-    }
-    return true;
+inline bool FirmataDevice::sendData(const std::vector<std::uint8_t> &data) {
+    return (-1 != serialPort.write(data));
 }
 
 
@@ -400,12 +314,10 @@ void FirmataDevice::receiveData() {
     std::uint8_t currentCommand = 0;
     
     while (continueReceivingData.test_and_set()) {
-        // Since this is the only thread that reads from fd, we don't need a lock here
-        auto result = ::read(fd, message.data() + bytesReceived, bytesExpected - bytesReceived);
+        // Since this is the only thread that reads from the serial port, we don't need a lock here
+        auto result = serialPort.read(message.data() + bytesReceived, bytesExpected - bytesReceived);
         
         if (-1 == result) {
-            
-            serialError("Read from serial port failed");
             
             //
             // It would be nice if we tried to re-connect.  However, most Arduinos will reset the
@@ -537,11 +449,6 @@ void FirmataDevice::receiveData() {
             
         }
     }
-}
-
-
-inline void FirmataDevice::serialError(const std::string &msg) const {
-    merror(M_IODEVICE_MESSAGE_DOMAIN, "%s (%s): %s", msg.c_str(), serialPort.c_str(), strerror(errno));
 }
 
 
