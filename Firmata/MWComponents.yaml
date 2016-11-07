@@ -4,7 +4,6 @@
 name: Firmata Device
 signature: iodevice/firmata
 isa: IODevice
-icon: smallIOFolder
 description: |
     Interface to a microcontroller that supports the
     `Firmata protocol <https://github.com/firmata/protocol>`_.
@@ -32,16 +31,19 @@ parameters:
 name: Firmata Digital Input Channel
 signature: iochannel/firmata_digital_input
 isa: IOChannel
-icon: smallIOFolder
 allowed_parent: Firmata Device
 description: Digital input channel on a `Firmata Device`
 parameters: 
   - 
     name: pin_number
     required: yes
+    example: 13
+    description: Input pin number
   - 
     name: value
     required: yes
+    description: >
+        Variable in which to store input state (true or false)
 
 
 ---
@@ -50,15 +52,20 @@ parameters:
 name: Firmata Digital Output Channel
 signature: iochannel/firmata_digital_output
 isa: IOChannel
-icon: smallIOFolder
 allowed_parent: Firmata Device
 description: Digital output channel on a `Firmata Device`
 parameters: 
   - 
     name: pin_number
     required: yes
+    example: 4
+    description: Output pin number
   - 
     name: value
     required: yes
+    description: >
+        Variable from which to read output state (true or false).  `Assigning
+        <Assign Variable>` a value to the variable causes the output state to be
+        changed immediately.
 
 
